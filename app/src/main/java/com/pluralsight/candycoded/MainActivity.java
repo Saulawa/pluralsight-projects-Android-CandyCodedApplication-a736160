@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -37,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = db.rawQuery("SELECT * FROM candy", null);
 
         final CandyCursorAdapter adapter = new CandyCursorAdapter(this, cursor);
-        ListView listView = (ListView)this.findViewById(R.id.list_view_candy);
+        ListView listView = (ListView) this.findViewById(R.id.list_view_candy);
 
         listView.setAdapter(adapter);
 
@@ -61,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, String response) {
                         Log.d("AsyncHttpClient", "response = " + response);
-                        Gson gson = new GsonBuilder().create();;
+                        Gson gson = new GsonBuilder().create();
+                        ;
                         candies = gson.fromJson(response, Candy[].class);
 
                         addCandiesToDatabase(candies);
@@ -82,6 +87,20 @@ public class MainActivity extends AppCompatActivity {
     // ***
     // TODO - Task 1 - Show Store Information Activity
     // ***
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == R.id.info) {
+
+            startActivity(new Intent(this, InfoActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
+
+
+    }
 
     private void addCandiesToDatabase(Candy[] candies) {
         SQLiteDatabase db = candyDbHelper.getWritableDatabase();
